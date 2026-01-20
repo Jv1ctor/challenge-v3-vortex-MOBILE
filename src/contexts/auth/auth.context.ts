@@ -5,7 +5,7 @@ export type AuthContextData = {
   token: string | null | undefined
   isLoading: boolean
   error: boolean,
-  login: (username: string, password: string) => Promise<void>
+  login: (username: string, password: string) => Promise<boolean>
   logout: () => Promise<void>
 }
 

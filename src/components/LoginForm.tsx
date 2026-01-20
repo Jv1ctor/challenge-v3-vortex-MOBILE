@@ -3,10 +3,12 @@ import { Input } from './ui/Input';
 import { InputPassword } from './ui/InputPassword';
 import { Button } from './ui/Button';
 import { useState } from 'react';
-import { useAuth } from '@/hooks/auth.context';
+import { useAuth } from '@/hooks/auth.hook';
+import { useRouter } from 'expo-router';
 
 export const LoginForm = () => {
-  const { login, isLoading, error } = useAuth();
+  const { login } = useAuth();
+  const router = useRouter()
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -17,8 +19,12 @@ export const LoginForm = () => {
       return;
     }
 
-    const token = await login(username, password)
-
+    const result = await login(username, password)
+    if(result){
+      router.replace("/Home")
+    }else{
+      setErrorMessage('Usuario ou Senha invalidos')
+    }
   };
 
   const handleChange = (value: string, setter: (arg: string) => void) => {

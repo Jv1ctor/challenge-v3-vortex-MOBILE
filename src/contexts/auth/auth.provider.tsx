@@ -31,19 +31,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const login = useCallback(
-    async (username: string, password: string) => {
+    async (username: string, password: string): Promise<boolean> => {
       setIsLoading(true);
       const result = await AuthService.loginRequest({ username, password });
-
       if (!result) {
         setIsLoading(false);
         setError(true);
-        return;
+        return false;
       }
 
       await AsyncStorage.setItem('token', result);
       setToken(result);
+      setError(false)
       setIsLoading(false);
+      return true
     },
     [setIsLoading, setToken, setError]
   );
