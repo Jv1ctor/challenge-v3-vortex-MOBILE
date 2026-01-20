@@ -21,7 +21,7 @@ export const LoginForm = () => {
 
     const result = await login(username, password)
     if(result){
-      router.replace("/Home")
+      router.replace("/(tabs)") 
     }else{
       setErrorMessage('Usuario ou Senha invalidos')
     }

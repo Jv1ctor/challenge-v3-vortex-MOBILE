@@ -1,16 +1,13 @@
 import { getApiBaseUrl } from "@/config/env";
+import { AuthResponse } from "./auth.type";
 
 type LoginData = {
   username: string;
   password: string;
 };
 
-type ResponseApiLogin = {
-  access_token: string;
-};
-
 export const AuthService = {
-  async loginRequest(data: LoginData): Promise<string | null> {
+  async loginRequest(data: LoginData): Promise<AuthResponse | null> {
     try {
       const body = JSON.stringify({
         username: data.username,
@@ -31,8 +28,8 @@ export const AuthService = {
         throw new Error(`RESPONSE STATUS: ${response.status}`);
       }
 
-      const result: ResponseApiLogin = await response.json();
-      return result.access_token;
+      const result: AuthResponse = await response.json();
+      return result;
     } catch (error) {
       if (error instanceof Error) console.warn(error.message);
       return null;
