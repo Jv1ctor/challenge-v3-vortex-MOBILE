@@ -1,3 +1,5 @@
+import { getApiBaseUrl } from "@/config/env";
+
 type LoginData = {
   username: string;
   password: string;
@@ -15,9 +17,10 @@ export const AuthService = {
         password: data.password,
       });
 
-      const response = await fetch('http://localhost:4000/api/auth/mobile/login', {
+      const response = await fetch(`${getApiBaseUrl()}/api/auth/mobile/login`, {
         method: 'POST',
         headers: {
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body,
@@ -31,7 +34,7 @@ export const AuthService = {
       const result: ResponseApiLogin = await response.json();
       return result.access_token;
     } catch (error) {
-      if (error instanceof Error) console.error(error.message);
+      if (error instanceof Error) console.warn(error.message);
       return null;
     }
   },
