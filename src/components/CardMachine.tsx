@@ -41,7 +41,7 @@ export const CardMachine: React.FC<CardMachineProps> = ({
               </Text>
             </View>
 
-            <View className="flex-row items-center justify-between bg-slate-100 p-4">
+            <View className="flex-row items-center justify-between bg-sky-50 p-4">
               <View className="flex-1">
                 <View className="flex-row items-center gap-2">
                   <FontAwesome5 name="th-list" size={16} color="#71717a" />
