@@ -1,9 +1,9 @@
-import { MachinesService } from "@/services/machines/machines.service";
-import { ResponseMachinesByFactory } from "@/services/machines/machines.type";
-import { useCallback, useEffect, useState } from "react";
+import { MachineByFactDto } from '@/services/factories/dtos/machines.dto';
+import { FactoriesService } from '@/services/factories/factories.service';
+import { useCallback, useEffect, useState } from 'react';
 
 export const useMachines = (token: string | null, factoryId: number | null | undefined) => {
-  const [data, setData] = useState<ResponseMachinesByFactory | null>(null);
+  const [data, setData] = useState<MachineByFactDto | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -12,8 +12,17 @@ export const useMachines = (token: string | null, factoryId: number | null | und
     setLoading(true);
     setError(null);
     try {
-      const res = await MachinesService.listMachinesByFactory(token, factoryId);
-      setData(res);
+      const res = await FactoriesService.listMachinesByFactory(token, factoryId);
+      if (!res) {
+        setData(null);
+        return;
+      }
+      setData({
+        factory_id: res.id,
+        factory_name: res.name,
+        factory_created_at: res.created_at,
+        data: res.data,
+      });
     } catch (err: any) {
       setError(err);
     } finally {
@@ -26,4 +35,4 @@ export const useMachines = (token: string | null, factoryId: number | null | und
   }, [fetchMachines]);
 
   return { data, loading, error, refetch: fetchMachines };
-}
+};
