@@ -3,7 +3,7 @@
 export type User = {
   id: string,
   token: string | null,
-	facotyId: number | null,
+	factoryId: number | null,
 	isAdmin: boolean,
 	name: string
 }
