@@ -3,7 +3,7 @@ import { createContext } from "react";
 
 
 export type AuthContextData = {
-  token: string | null | undefined
+  // token: string | null | undefined
   isLoading: boolean,
   user: User | null,
   error: boolean,

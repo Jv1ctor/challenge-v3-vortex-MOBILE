@@ -8,10 +8,11 @@ type AuthProviderProps = {
   children: ReactNode;
 };
 
-const getTokenAsync = async () => {
+const getUserAsync = async (): Promise<User | null> => {
   try {
-    const token = await AsyncStorage.getItem('token');
-    return token;
+    const user = await AsyncStorage.getItem('user');
+    if (!user) return null;
+    return JSON.parse(user) as User;
   } catch (error) {
     console.error('Erro ao buscar token:', error);
     throw error;
@@ -19,17 +20,15 @@ const getTokenAsync = async () => {
 };
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [token, setToken] = useState<string | null>(null);
+  // const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
     setIsLoading(true);
-    getTokenAsync()
-      .then((token) => {setToken(token)
-        console.log("hook",token)
-      })
+    getUserAsync()
+      .then((user) => setUser(user))
       .catch(() => setError(true))
       .finally(() => setIsLoading(false));
   }, []);
@@ -44,27 +43,37 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         return false;
       }
 
-      await AsyncStorage.setItem('token', result.access_token);
-      setToken(result.access_token);
+      // await AsyncStorage.setItem('token', result.access_token);
+      await AsyncStorage.setItem(
+        'user',
+        JSON.stringify({
+          id: result.id,
+          token: result.access_token,
+          facotyId: result.facotyId,
+          isAdmin: result.isAdmin,
+          name: result.name,
+        })
+      );
+      // setToken(result.access_token);
       setUser({
         ...result,
         token: result.access_token,
-      })
-      setError(false)
+      });
+      setError(false);
       setIsLoading(false);
-      return true
+      return true;
     },
-    [setIsLoading, setToken, setUser,setError]
+    [setIsLoading, setUser, setError]
   );
 
   const logout = useCallback(async () => {
-    await AsyncStorage.removeItem('token');
-    setToken(null);
-    setUser(null)
-  }, [setToken]);
+    await AsyncStorage.removeItem('user');
+    // setToken(null);
+    setUser(null);
+  }, [setUser]);
 
   return (
-    <AuthContext.Provider value={{ login, user, token, logout, error, isLoading }}>
+    <AuthContext.Provider value={{ login, user, logout, error, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

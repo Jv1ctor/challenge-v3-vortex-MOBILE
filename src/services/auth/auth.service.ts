@@ -13,7 +13,6 @@ export const AuthService = {
         username: data.username,
         password: data.password,
       });
-
       const response = await fetch(`${getApiBaseUrl()}/api/auth/mobile/login`, {
         method: 'POST',
         headers: {
