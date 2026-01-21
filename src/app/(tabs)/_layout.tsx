@@ -1,15 +1,19 @@
 import { Tabs } from 'expo-router';
-import Feather from '@expo/vector-icons/Feather';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function TabsLayout() {
   return (
-    <Tabs screenOptions={{ headerShown: false,tabBarActiveTintColor: '#1d6bf5' }}>
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: '#1d6bf5',
+      }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Maquinas',
-          tabBarIcon: ({ color }) => <Feather name="home" size={24} color={color} />,
+          title: 'Fabrica',
+          tabBarIcon: ({ color }) => <MaterialIcons name="factory" size={24} color={color} />,
         }}
       />
 
