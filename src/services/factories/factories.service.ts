@@ -1,9 +1,11 @@
-import { getApiBaseUrl } from '@/config/env';
-import { ResponseMachinesByFactory } from './machines.type';
-import { formatDate } from '@/lib/formatted-data';
+import { getApiBaseUrl } from "@/config/env";
+import { MachineByFactResDto } from "./dtos/machines.dto";
+import { formatDate } from "@/lib/formatted-data";
 
-export const MachinesService = {
-  async listMachinesByFactory(token: string, factoryId: number) {
+
+
+export const FactoriesService = {
+   async listMachinesByFactory(token: string, factoryId: number) {
     try {
       const response = await fetch(`${getApiBaseUrl()}/api/factories/${factoryId}/machines`, {
         method: 'GET',
@@ -18,7 +20,7 @@ export const MachinesService = {
         throw new Error(`RESPONSE STATUS: ${response.status}`);
       }
 
-      const result: ResponseMachinesByFactory = await response.json();
+      const result: MachineByFactResDto = await response.json();
       return {
         ...result,
         data: result.data.map((it) => ({
