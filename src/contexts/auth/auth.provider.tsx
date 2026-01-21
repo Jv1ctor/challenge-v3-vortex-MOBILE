@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         JSON.stringify({
           id: result.id,
           token: result.access_token,
-          facotyId: result.facotyId,
+          factoryId: result.factoryId,
           isAdmin: result.isAdmin,
           name: result.name,
         })
@@ -68,7 +68,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const logout = useCallback(async () => {
     await AsyncStorage.removeItem('user');
-    // setToken(null);
     setUser(null);
   }, [setUser]);
 
