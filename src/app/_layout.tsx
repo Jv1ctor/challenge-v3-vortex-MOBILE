@@ -8,13 +8,16 @@ export default function RootLayout() {
   return (
     <AuthProvider>
       <Stack>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(public)" options={{ headerShown: false }} />
 
         <Stack.Screen
-          name='(modals)/machines/[id]'
+          name="(modals)/machines/[id]"
           options={{
             presentation: 'formSheet',
-            animation: "slide_from_bottom", 
+            animation: 'slide_from_bottom',
             gestureEnabled: true,
             headerShown: false,
           }}

@@ -12,11 +12,13 @@ export default function Index(){
     console.log("user:", data)
   })
 
+  AsyncStorage.getAllKeys().then(console.log)
+  
   if (isLoading) {
       return <Spinner />
   }
 
-  if(user?.token){
+  if(user && user.id && user.factoryId){
     return <Redirect href="/(tabs)" />;
   }
 
