@@ -13,6 +13,7 @@ export default function Index(){
   })
 
   AsyncStorage.getAllKeys().then(console.log)
+  // AsyncStorage.removeItem("user")
   
   if (isLoading) {
       return <Spinner />

@@ -1,19 +1,37 @@
 import { InputRegistries } from '@/components/InputRegistries';
 import { TableRegistries } from '@/components/TableRegistries';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Spinner } from '@/components/ui/Spinner';
+import { useAuth } from '@/hooks/auth.hook';
+import { useRegistries } from '@/hooks/registries.hook';
+import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
+import { useEffect } from 'react';
 import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function MachinesModal() {
+  const { user, isLoading } = useAuth();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const { getRegistries, insertRegistries } = useRegistries(user?.token ?? null, Number(id));
+  
+  useEffect(() => {
+    if(insertRegistries.loadingInsert)
+      getRegistries.refetchRegistries();
+  }, [insertRegistries.loadingInsert, getRegistries]);
 
-  const handleBackScreen = () => router.back();
+  if (isLoading && getRegistries.loadingData) {
+    return <Spinner />;
+  }
+
+  if ((!user?.token && !user?.factoryId) || getRegistries.isErrorData) {
+    return <Redirect href={'/Login'} />;
+  }
 
   if (!id) {
-    handleBackScreen();
+    router.back();
     return;
   }
+
 
   return (
     <SafeAreaView className="flex-1 bg-card">
@@ -26,13 +44,23 @@ export default function MachinesModal() {
         <Text className="mt-1 text-sm text-mutedForeground">Gerenciamento de registros</Text>
       </View>
 
-      <View className='p-5'>
-
-        <InputRegistries />
-
+      <View className="p-5">
+        <InputRegistries
+          onInsert={insertRegistries.fetchInsertRegistry}
+          isError={insertRegistries.isErrorInsert}
+          loading={insertRegistries.loadingInsert}
+        />
       </View>
 
-      <TableRegistries />
+      <TableRegistries
+        data={getRegistries.data}
+        loading={
+          insertRegistries.loadingInsert
+            ? insertRegistries.loadingInsert
+            : getRegistries.loadingData
+        }
+        refetch={getRegistries.refetchRegistries}
+      />
     </SafeAreaView>
   );
 }

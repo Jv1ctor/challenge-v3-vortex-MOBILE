@@ -19,7 +19,7 @@ type CardRegistriesProps = {
 
 export const CardRegistries = ({ value, registryAt, username }: CardRegistriesProps) => {
   return (
-    <View className="rounded-lg bg-neutral-50 mb-5">
+    <View className="rounded-lg bg-neutral-50">
       <View className="relative flex-row items-center justify-around gap-5 p-5">
         <View className="flex-row items-end gap-2">
           <Text className="text-3xl font-bold text-cardForeground">{value.toFixed(2)}</Text>
@@ -36,7 +36,7 @@ export const CardRegistries = ({ value, registryAt, username }: CardRegistriesPr
 
           <View className="flex-row items-center gap-2">
             <MaterialIcons name="calendar-month" size={18} color="#71717a" />
-            <Text className="text-lg font-medium text-mutedForeground">{registryAt}</Text>
+            <Text className="text-base font-medium text-mutedForeground">{registryAt}</Text>
           </View>
         </View>
       </View>

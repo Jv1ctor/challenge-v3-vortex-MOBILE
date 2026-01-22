@@ -15,7 +15,7 @@ export default function Home() {
     loading,
     refetch,
     isError,
-  } = useMachines(user?.token ?? null, user?.factoryId);
+  } = useMachines(user?.token ?? null, user?.factoryId, openModal);
 
   useFocusEffect(
     useCallback(() => {
@@ -41,45 +41,47 @@ export default function Home() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
-      <View className="border-b border-border px-6 pb-3 pt-4">
+    <>
+      <View className="border-b border-border bg-background px-6 pb-3 pt-20">
         <Text className="text-3xl font-bold text-foreground">{machines?.factory_name}</Text>
         <Text className="mt-1 text-sm text-mutedForeground">Gerenciamento da Maquinas</Text>
       </View>
 
-      <View className="flex-1 bg-zinc-50 px-4 pt-4">
-        <FlatList
-          data={machines?.data}
-          renderItem={({ item }) => (
-            <CardMachine
-              consumption={item.total_value}
-              onPress={() => handleOpenModalRegistries(item.id)}
-              lastRecord={item.last_registry_at}
-              name={item.name}
-              records={item.total_registries}
-              model={item.model}
-              manufacturer={item.manufacturer}
-            />
-          )}
-          keyExtractor={(it) => String(it.id)}
-          ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-          contentContainerStyle={{ paddingBottom: 16 }}
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl
-              refreshing={loading}
-              onRefresh={refetch}
-              tintColor="#1d6bf5"
-              colors={['#1d6bf5']}
-            />
-          }
-          ListEmptyComponent={
-            <View className="items-center justify-center py-12">
-              <Text className="text-base text-mutedForeground">Nenhuma máquina encontrada</Text>
-            </View>
-          }
-        />
-      </View>
-    </SafeAreaView>
+      <SafeAreaView className="bg-zin-50 flex-1 -mt-16">
+        <View className="flex-1 px-4 pt-4">
+          <FlatList
+            data={machines?.data}
+            renderItem={({ item }) => (
+              <CardMachine
+                consumption={item.total_value}
+                onPress={() => handleOpenModalRegistries(item.id)}
+                lastRecord={item.last_registry_at}
+                name={item.name}
+                records={item.total_registries}
+                model={item.model}
+                manufacturer={item.manufacturer}
+              />
+            )}
+            keyExtractor={(it) => String(it.id)}
+            ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+            contentContainerStyle={{ paddingBottom: 16 }}
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={loading}
+                onRefresh={refetch}
+                tintColor="#1d6bf5"
+                colors={['#1d6bf5']}
+              />
+            }
+            ListEmptyComponent={
+              <View className="items-center justify-center py-12">
+                <Text className="text-base text-mutedForeground">Nenhuma máquina encontrada</Text>
+              </View>
+            }
+          />
+        </View>
+      </SafeAreaView>
+    </>
   );
 }
