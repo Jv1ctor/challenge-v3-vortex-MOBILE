@@ -1,5 +1,5 @@
+import { InputRegistries } from '@/components/InputRegistries';
 import { TableRegistries } from '@/components/TableRegistries';
-import { Input } from '@/components/ui/Input';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -28,7 +28,7 @@ export default function MachinesModal() {
 
       <View className='p-5'>
 
-        <InputRegistries
+        <InputRegistries />
 
       </View>
 
