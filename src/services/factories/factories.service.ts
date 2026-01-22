@@ -19,7 +19,7 @@ export const FactoriesService = {
       if (!response.ok) {
         throw new Error(`RESPONSE STATUS: ${response.status}`);
       }
-
+      
       const result: MachineByFactResDto = await response.json();
       return {
         ...result,

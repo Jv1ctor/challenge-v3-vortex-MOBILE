@@ -5,16 +5,17 @@ import { useCallback, useEffect, useState } from 'react';
 export const useMachines = (token: string | null, factoryId: number | null | undefined) => {
   const [data, setData] = useState<MachineByFactDto | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [isError, setIsError] = useState<boolean>(false);
 
   const fetchMachines = useCallback(async () => {
     if (!factoryId || !token) return;
     setLoading(true);
-    setError(null);
+    setIsError(false);
     try {
       const res = await FactoriesService.listMachinesByFactory(token, factoryId);
       if (!res) {
         setData(null);
+        setIsError(true)
         return;
       }
       setData({
@@ -24,7 +25,7 @@ export const useMachines = (token: string | null, factoryId: number | null | und
         data: res.data,
       });
     } catch (err: any) {
-      setError(err);
+      setIsError(!!err);
     } finally {
       setLoading(false);
     }
@@ -34,5 +35,5 @@ export const useMachines = (token: string | null, factoryId: number | null | und
     fetchMachines();
   }, [fetchMachines]);
 
-  return { data, loading, error, refetch: fetchMachines };
+  return { data, loading, isError, refetch: fetchMachines };
 };
