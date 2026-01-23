@@ -1,68 +1,27 @@
-import { RegistriesDto } from '@/services/machines/dtos/registries.dto';
-import { MachineService } from '@/services/machines/machines.service';
-import { useCallback, useEffect, useState } from 'react';
+import { RegistriesContext } from '@/contexts/registries/registries.context';
+import { useContext, useEffect } from 'react';
 
-export const useRegistries = (token: string | null, machineId: number | null | undefined) => {
-  const [data, setData] = useState<RegistriesDto[] | null>(null);
-  const [loadingData, setLoadingData] = useState<boolean>(false);
-  const [isErrorData, setIsErrorData] = useState<boolean>(false);
+export const useRegistries = (token?: string | null, machineId?: number | null) => {
+  const context = useContext(RegistriesContext);
 
-  const [loadingInsert, setLoadingInsert] = useState<boolean>(false);
-  const [isErrorInsert, setIsErrorInsert] = useState<boolean>(false);
-
-  const fetchRegistries = useCallback(async () => {
-    if (!machineId || !token) return;
-    setLoadingData(true);
-    setIsErrorData(false);
-    try {
-      const res = await MachineService.getRegistries(token, machineId);
-      if (!res) {
-        setData(null);
-        setIsErrorData(true);
-        return;
-      }
-      setData(res);
-    } catch (err: any) {
-      setIsErrorData(!!err);
-    } finally {
-      setLoadingData(false);
-    }
-  }, [token, machineId]);
-
-  const fetchInsertRegistry = useCallback(
-    async (value: number) => {
-      if (!machineId || !token) return;
-      setLoadingInsert(true);
-      setIsErrorInsert(false);
-      try {
-        const res = await MachineService.insertRegistries(token, machineId, value);
-        if (!res) {
-          setIsErrorData(true);
-        }
-      } catch (err: any) {
-        setIsErrorData(!!err);
-      } finally {
-        setLoadingInsert(false);
-      }
-    },
-    [token, machineId]
-  );
+  if (!context) {
+    throw new Error('useRegistries must be inside RegistriesProvider');
+  }
 
   useEffect(() => {
-    fetchRegistries();
-  }, [fetchRegistries]);
+    context.registriesGetter.fetch(token, machineId);
+  }, [token, machineId]);
 
-  return {
-    getRegistries: {
-      data,
-      loadingData,
-      isErrorData,
-      refetchRegistries: fetchRegistries,
+
+  return { 
+    registriesGetter: {
+      ...context.registriesGetter,
+      fetch: () => context.registriesGetter.fetch(token, machineId)
     },
-    insertRegistries: {
-      loadingInsert,
-      isErrorInsert,
-      fetchInsertRegistry
+
+    registriesSetter: {
+      ...context.registriesSetter,
+      insert: (value: number) => context.registriesSetter.insert(value, token ?? null, machineId ?? null)
     }
-  };
+  }
 };
