@@ -1,8 +1,7 @@
 import { MachineByFactDto } from '@/services/factories/dtos/machines.dto';
 import { FactoriesService } from '@/services/factories/factories.service';
 import { useCallback, useEffect, useState } from 'react';
-
-export const useMachines = (token: string | null, factoryId: number | null | undefined, dependecies: boolean) => {
+export const useMachines = (token: string | null, factoryId: number | null | undefined) => {
   const [data, setData] = useState<MachineByFactDto | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
@@ -15,7 +14,7 @@ export const useMachines = (token: string | null, factoryId: number | null | und
       const res = await FactoriesService.listMachinesByFactory(token, factoryId);
       if (!res) {
         setData(null);
-        setIsError(true)
+        setIsError(true);
         return;
       }
       setData({
@@ -32,8 +31,8 @@ export const useMachines = (token: string | null, factoryId: number | null | und
   }, [token, factoryId]);
 
   useEffect(() => {
-    if (!dependecies) fetchMachines();
-  }, [dependecies]);
+    fetchMachines();
+  }, []);
 
   return { data, loading, isError, refetch: fetchMachines };
 };
