@@ -10,7 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Home() {
   const [openModal, setOpenModal] = useState(false);
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, logout} = useAuth();
   const { registriesSetter } = useRegistries();
   const {
     data: machines,
@@ -34,6 +34,7 @@ export default function Home() {
   }
 
   if ((!user?.token && !user?.factoryId) || isError) {
+    logout()
     return <Redirect href={'/Login'} />;
   }
 
