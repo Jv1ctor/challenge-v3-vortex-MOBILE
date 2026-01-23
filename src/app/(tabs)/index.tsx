@@ -2,26 +2,32 @@ import { CardMachine } from '@/components/CardMachine';
 import { Spinner } from '@/components/ui/Spinner';
 import { useAuth } from '@/hooks/auth.hook';
 import { useMachines } from '@/hooks/machines.hook';
+import { useRegistries } from '@/hooks/registries.hook';
 import { Redirect, router, useFocusEffect } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FlatList, Text, View, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Home() {
   const [openModal, setOpenModal] = useState(false);
   const { user, isLoading } = useAuth();
+  const { registriesSetter } = useRegistries();
   const {
     data: machines,
     loading,
     refetch,
     isError,
-  } = useMachines(user?.token ?? null, user?.factoryId, openModal);
+  } = useMachines(user?.token ?? null, user?.factoryId);
 
   useFocusEffect(
     useCallback(() => {
       setOpenModal(false);
     }, [setOpenModal])
   );
+
+  useEffect(() => {
+    if (registriesSetter.loading) refetch();
+  }, [registriesSetter.loading]);
 
   if (isLoading && loading) {
     return <Spinner />;
@@ -31,10 +37,13 @@ export default function Home() {
     return <Redirect href={'/Login'} />;
   }
 
-  const handleOpenModalRegistries = (machineId: number) => {
+  const handleOpenModalRegistries = (machineId: number, machineName: string) => {
     if (!openModal) {
       router.push({
         pathname: `/(modals)/machines/${machineId}`,
+        params: {
+          machineName: machineName,
+        },
       });
     }
     setOpenModal(true);
@@ -47,14 +56,14 @@ export default function Home() {
         <Text className="mt-1 text-sm text-mutedForeground">Gerenciamento da Maquinas</Text>
       </View>
 
-      <SafeAreaView className="bg-zin-50 flex-1 -mt-16">
+      <SafeAreaView className="bg-zin-50 -mt-16 flex-1">
         <View className="flex-1 px-4 pt-4">
           <FlatList
             data={machines?.data}
             renderItem={({ item }) => (
               <CardMachine
                 consumption={item.total_value}
-                onPress={() => handleOpenModalRegistries(item.id)}
+                onPress={() => handleOpenModalRegistries(item.id, item.name)}
                 lastRecord={item.last_registry_at}
                 name={item.name}
                 records={item.total_registries}
@@ -68,7 +77,7 @@ export default function Home() {
             showsVerticalScrollIndicator={false}
             refreshControl={
               <RefreshControl
-                refreshing={loading}
+                refreshing={registriesSetter.loading ? registriesSetter.loading : loading}
                 onRefresh={refetch}
                 tintColor="#1d6bf5"
                 colors={['#1d6bf5']}

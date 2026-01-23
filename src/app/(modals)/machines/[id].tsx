@@ -10,20 +10,19 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function MachinesModal() {
   const { user, isLoading } = useAuth();
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, machineName } = useLocalSearchParams<{ id: string; machineName: string }>();
   const router = useRouter();
-  const { getRegistries, insertRegistries } = useRegistries(user?.token ?? null, Number(id));
-  
-  useEffect(() => {
-    if(insertRegistries.loadingInsert)
-      getRegistries.refetchRegistries();
-  }, [insertRegistries.loadingInsert, getRegistries]);
+  const { registriesGetter, registriesSetter } = useRegistries(user?.token ?? null, Number(id));
 
-  if (isLoading && getRegistries.loadingData) {
+  useEffect(() => {
+    if (registriesSetter.loading) registriesGetter.fetch();
+  }, [registriesSetter.loading]);
+
+  if (isLoading && registriesGetter.loading) {
     return <Spinner />;
   }
 
-  if ((!user?.token && !user?.factoryId) || getRegistries.isErrorData) {
+  if ((!user?.token && !user?.factoryId) || registriesGetter.isError) {
     return <Redirect href={'/Login'} />;
   }
 
@@ -40,26 +39,27 @@ export default function MachinesModal() {
       </View>
 
       <View className="border-b border-border px-6 pb-3 pt-4">
-        <Text className="text-3xl font-bold text-foreground">maquina</Text>
-        <Text className="mt-1 text-sm text-mutedForeground">Gerenciamento de registros</Text>
+        <Text className="text-3xl font-bold text-foreground">{machineName}</Text>
+        <Text className="mt-1 text-sm text-mutedForeground">
+          Gerenciamento de registros da maquina
+        </Text>
       </View>
 
       <View className="p-5">
         <InputRegistries
-          onInsert={insertRegistries.fetchInsertRegistry}
-          isError={insertRegistries.isErrorInsert}
-          loading={insertRegistries.loadingInsert}
+          onInsert={(value) => registriesSetter.insert(value)}
+          isError={registriesSetter.isError}
         />
       </View>
 
       <TableRegistries
-        data={getRegistries.data}
+        data={registriesGetter.data}
         loading={
-          insertRegistries.loadingInsert
-            ? insertRegistries.loadingInsert
-            : getRegistries.loadingData
+          registriesSetter.loading
+            ? registriesSetter.loading
+            : registriesGetter.loading
         }
-        refetch={getRegistries.refetchRegistries}
+        refetch={() => registriesGetter.fetch()}
       />
     </SafeAreaView>
   );
