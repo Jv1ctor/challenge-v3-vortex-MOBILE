@@ -9,11 +9,10 @@ type TableRegistriesProps = {
 };
 
 export const TableRegistries = ({ data, refetch, loading }: TableRegistriesProps) => {
-
   return (
     <View className="flex-1 p-5">
       <Text className="mb-4 ml-1 text-2xl font-semibold">Historico de Registros: </Text>
-      <View className='flex-1'> 
+      <View className="flex-1">
         <FlatList
           data={data}
           renderItem={({ item }) => (
