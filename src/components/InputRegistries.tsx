@@ -3,14 +3,15 @@ import { Button } from './ui/Button';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useState } from 'react';
+import { getDate, getTime } from '@/lib/formatted-data';
 
 type InputRegistriesProps = {
   onInsert: (value: number) => Promise<void>;
-  loading: boolean;
   isError: boolean;
 };
 
-export const InputRegistries = ({ onInsert, loading }: InputRegistriesProps) => {
+export const InputRegistries = ({ onInsert }: InputRegistriesProps) => {
+  const datetime = new Date()
   const [value, setValue] = useState(0);
 
   const handleAdd = () => {
@@ -54,7 +55,7 @@ export const InputRegistries = ({ onInsert, loading }: InputRegistriesProps) => 
 
           <View>
             <Text className="font-medium text-mutedForeground">DATA</Text>
-            <Text className="font-medium text-foreground">10/11/20</Text>
+            <Text className="font-medium text-foreground">{getDate(datetime)}</Text>
           </View>
         </View>
 
@@ -65,7 +66,7 @@ export const InputRegistries = ({ onInsert, loading }: InputRegistriesProps) => 
 
           <View>
             <Text className="font-medium text-mutedForeground">HORA</Text>
-            <Text className="font-medium text-foreground">10:50</Text>
+            <Text className="font-medium text-foreground">{getTime(datetime)}</Text>
           </View>
         </View>
       </View>
@@ -94,7 +95,6 @@ export const InputRegistries = ({ onInsert, loading }: InputRegistriesProps) => 
             <Text className="text-3xl text-mutedForeground">+</Text>
           </Pressable>
         </View>
-        <Text className="text-mutedForeground">Última: 354.0 kWh</Text>
       </View>
 
       <Button className="w-2/3 self-center" onClick={handleInsert}>
