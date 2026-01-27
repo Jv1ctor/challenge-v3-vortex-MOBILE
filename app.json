@@ -1,13 +1,13 @@
 {
   "expo": {
     "name": "challenge-v3-mobile",
-    "slug": "my-expo-app",
+    "slug": "challenge-vortex",
     "version": "1.0.0",
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "experiments": {
-      "tsconfigPaths": true,
+      "tsconfigPaths": true
     },
     "plugins": [
       "expo-router"
@@ -24,13 +24,25 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.jv1ctorsorganization.challengevortex",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "package": "com.jv1ctorsorganization.challengevortex"
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "4544d452-694f-42cb-afa2-c0536f2aa17c"
       }
-    }
+    },
+    "owner": "jv1ctors-organization"
   }
 }
