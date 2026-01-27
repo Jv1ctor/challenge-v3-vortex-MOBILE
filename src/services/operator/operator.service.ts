@@ -22,7 +22,7 @@ export const OperatorService = {
       const result: ResponseGetProfile = await response.json();
       return {
         ...result,
-        last_registry_at: formatDate(result.last_registry_at),
+        last_registry_at: result.last_registry_at ? formatDate(result.last_registry_at) : null,
       };
     } catch (error) {
       if (error instanceof Error) console.warn(error.message);

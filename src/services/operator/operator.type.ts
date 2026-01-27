@@ -3,5 +3,5 @@ export type ResponseGetProfile = {
   name: string;
   factory_name: string;
   total_registries: number;
-  last_registry_at: string;
+  last_registry_at: string | null;
 };

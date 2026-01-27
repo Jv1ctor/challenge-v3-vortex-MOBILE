@@ -52,7 +52,7 @@ export default function Home() {
 
   return (
     <>
-      <View className="border-b border-border bg-background px-6 pb-3 pt-20">
+      <View className="border-b border-border bg-background px-6 pb-3 mb-5 pt-20">
         <Text className="text-3xl font-bold text-foreground">{machines?.factory_name}</Text>
         <Text className="mt-1 text-sm text-mutedForeground">Gerenciamento da Maquinas</Text>
       </View>
