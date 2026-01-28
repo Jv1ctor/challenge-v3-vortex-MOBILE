@@ -10,15 +10,28 @@ type InputRegistriesProps = {
   isError: boolean;
 };
 
-export const InputRegistries = ({ onInsert }: InputRegistriesProps) => {
-  const datetime = new Date()
+export const InputRegistries = ({ onInsert, isError }: InputRegistriesProps) => {
+  const datetime = new Date();
   const [value, setValue] = useState(0);
+  const [error, setError] = useState(false);
 
   const handleAdd = () => {
-    setValue(value + 5);
+    setError(false);
+    if (value < 1000000) {
+      setValue((prev) => {
+        let valueInsert = prev;
+
+        valueInsert += 5;
+        if (valueInsert >= 1000000) {
+          valueInsert = 1000000;
+        }
+        return valueInsert;
+      });
+    }
   };
 
   const handleSub = () => {
+    setError(false);
     if (value <= 4) {
       setValue(0);
       return;
@@ -27,8 +40,10 @@ export const InputRegistries = ({ onInsert }: InputRegistriesProps) => {
   };
 
   const handleTextChange = (text: string) => {
+    setError(false);
     const digit = text.replace(/\D/g, '');
     if (!digit) return;
+    if (Number(digit) > 1000000) return;
 
     setValue(Number(digit));
   };
@@ -38,9 +53,12 @@ export const InputRegistries = ({ onInsert }: InputRegistriesProps) => {
     const finalValue = Number(formatted);
     if (finalValue > 0) {
       await onInsert(finalValue);
+      if (isError) {
+        if (isError) setError(true);
+      }
     }
-  
-    setValue(0)
+
+    setValue(0);
   };
 
   const formatCurrency = (value: number) => {
@@ -95,6 +113,11 @@ export const InputRegistries = ({ onInsert }: InputRegistriesProps) => {
             <Text className="text-3xl text-mutedForeground">+</Text>
           </Pressable>
         </View>
+        {error && (
+          <Text className="text-md items-center text-destructive">
+            Valor inserido deve ser menor que 10000
+          </Text>
+        )}
       </View>
 
       <Button className="w-2/3 self-center" onClick={handleInsert}>

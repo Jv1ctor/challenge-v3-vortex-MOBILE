@@ -31,7 +31,6 @@ export default function MachinesModal() {
     return;
   }
 
-
   return (
     <SafeAreaView className="flex-1 bg-card">
       <View className="items-center py-4">
@@ -54,11 +53,7 @@ export default function MachinesModal() {
 
       <TableRegistries
         data={registriesGetter.data}
-        loading={
-          registriesSetter.loading
-            ? registriesSetter.loading
-            : registriesGetter.loading
-        }
+        loading={registriesSetter.loading ? registriesSetter.loading : registriesGetter.loading}
         refetch={() => registriesGetter.fetch()}
       />
     </SafeAreaView>
